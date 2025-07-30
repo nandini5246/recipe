@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Recipe Recommender</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #FF6B6B;
+            --secondary-color: #4ECDC4;
+            --dark-color: #292F36;
+            --light-color: #F7FFF7;
+            --accent-color: #FFE66D;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+        }
+        
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo {
+            height: 40px;
+            width: 30px;
+        }
+        
+        .login-btn {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-left: 1000px;
+        }
+        
+        .login-btn:hover {
+            background-color: #ff5252;
+            transform: scale(1.05);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, rgba(255,107,107,0.1) 0%, rgba(78,205,196,0.1) 100%);
+            padding: 80px 0;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 40px;
+        }
+        
+        .hero-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .search-box {
+            border-radius: 30px;
+            padding: 15px 25px;
+            border: 2px solid #ddd;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .search-btn {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+        
+        .mood-selector {
+            position: static;
+            right: 150px;
+            top: 10px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            margin-bottom: 60px;
+        }
+        
+        .mood-options {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            width: 200px;
+            right: 0;
+            top: 40px;
+            z-index: 100;
+        }
+        
+        .mood-options.show {
+            display: block;
+        }
+        
+        .mood-option {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .mood-option:hover {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+        }
+        
+        .section-title {
+            color: var(--dark-color);
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background-color: var(--secondary-color);
+            bottom: -10px;
+            left: 0;
+        }
+        
+        .slider-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+        
+        .slider-item {
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .slider-img {
+            height: 150px;
+            width: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            border: 5px solid var(--light-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .slider-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .testimonials {
+            background-color: var(--light-color);
+            padding: 60px 0;
+            margin-bottom: 40px;
+        }
+        
+        .testimonial-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .user-img {
+            height: 70px;
+            width: 70px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+        
+        .rating {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-logo {
+            height: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links h5 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+        
+        .footer-links a {
+            color: #aaa;
+            display: block;
+            margin-bottom: 10px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 20px;
+            margin-right: 15px;
+            transition: all 0.3s;
+        }
+        
+        .social-icons a:hover {
+            color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            border-top: 1px solid #444;
+            padding-top: 20px;
+            margin-top: 40px;
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        /* Recipe results section */
+        .recipe-results {
+            display: none;
+            margin-top: 40px;
+        }
+        
+        .recipe-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+        
+        .recipe-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .recipe-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        .recipe-body {
+            padding: 20px;
+        }
+        
+        .recipe-title {
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+        
+        .recipe-meta {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .recipe-meta span {
+            margin-right: 15px;
+        }
+        
+        .recipe-meta i {
+            margin-right: 5px;
+            color: var(--secondary-color);
+        }
+        
+        .recipe-desc {
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .recipe-btn {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        /* Mood indicator colors */
+        .happy { color: #FFD166; }
+        .energetic { color: #06D6A0; }
+        .relaxed { color: #118AB2; }
+        .comfort { color: #EF476F; }
+        .adventurous { color: #7209B7; }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header py-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-coffee">
+                    <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                    <line x1="6" y1="1" x2="6" x2="4"></line>
+                    <line x1="10" y1="1" x2="10" x2="8"></line>
+                    <line x1="14" y1="1" x2="14" x2="12"></line>
+                </svg>
+                <span style="font-weight: 700; color: #FF6B6B; font-size: 24px; margin-left: 5px;">SmartRecipe</span>
+            </div>
+            <!-- <button class="login-btn" id="loginBtn" onclick= "window.location.href='login.html'">
+                <i class="fas fa-user"></i> Login 
+               
+            </button>  -->
+             <a href="login.html"><button class="login-btn" id="loginBtn" ><i class="fas fa-user"></i> Login </button></a>
+             <a href="recipe.html"><button class="recipe-btn" id="recipeBtn" ><i class="fas fa-utensils"></i> Recipes </button></a>
+        </div> 
+    </header>  
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="hero-title display-4">Welcome to Smart Recipe</h1>
+            <p class="lead mb-5">Find perfect recipes tailored to your mood and cravings</p>
+            
+            <div class="search-container">
+                <div class="position-relative">
+                    <input type="text" class="form-control search-box" id="recipeSearch" placeholder="What would you like to cook today?">
+                     <button class="search-btn" id="searchBtn" onclick="window.location.href='recommend.html'"> 
+                         <!-- <a href="recipes.html"><button class="login-btn" id="loginBtn" ><i class="fas fa-user"></i> Login </button></a> -->
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <div class="position-relative d-inline-block">
+                        <button class="mood-selector" id="moodSelector">
+                            <i class="fas fa-smile"></i> Select Mood
+                        </button>
+                        <div class="mood-options" id="moodOptions">
+                            <div class="mood-option" data-mood="happy"><i class="fas fa-laugh happy"></i> Happy</div>
+                            <div class="mood-option" data-mood="energetic"><i class="fas fa-bolt energetic"></i> Energetic</div>
+                            <div class="mood-option" data-mood="relaxed"><i class="fas fa-couch relaxed"></i> Relaxed</div>
+                            <div class="mood-option" data-mood="comfort"><i class="fas fa-heart comfort"></i> Comfort</div>
+                            <div class="mood-option" data-mood="adventurous"><i class="fas fa-mountain adventurous"></i> Adventurous</div>
+                        </div>
+                    </div>
+                   
+                </div>
+                <small id="selectedMood" class="text-muted mt-2 d-block"></small>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending Recipes Carousel -->
+    <div class="slider-container">
+        <h2 class="section-title">Trending Recipes</h2>
+        <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://i0.wp.com/thehealthyhunterblog.com/wp-content/uploads/2016/09/VSCO-Cam-1.jpg-1.jpeg "class="d-block w-100" alt="Recipe 1">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Rainbow Buddha Bowl</h5>
+                        <p>Perfect for energizing your day</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://th.bing.com/th/id/OIP.OVYD-MTI6Mal4RCbjH8bBQHaKX?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" class="d-block w-100" alt="Recipe 2">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Creamy Mushroom Risotto</h5>
+                        <p>Comfort food at its best</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://th.bing.com/th/id/OIP.qtzSgbsl6of-hpht-HQt8AHaLH?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" class="d-block w-100" alt="Recipe 3">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Thai Green Curry</h5>
+                        <p>For adventurous taste buds</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#recipeCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#recipeCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mood-based Recommendations (will be populated by JS) -->
+    <div class="recipe-results" id="recipeResults">
+        <h2 class="section-title">Recommended For You</h2>
+        <div class="row" id="recipesContainer">
+            <!-- Recipes will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- User Testimonials -->
+    <div class="testimonials">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">What Our Users Say</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://placehold.co/100x100" alt="Smiling woman in her 30s with curly hair" class="user-img">
+                            <div>
+                                <h5>Sarah Johnson</h5>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p>"This app changed how I cook! The mood-based recommendations are spot on. Found my new favorite comfort pasta recipe."</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://placehold.co/100x100" alt="Serious looking middle-aged man with glasses" class="user-img">
+                            <div>
+                                <h5>Michael Chen</h5>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p>"As someone who doesn't know what to cook often, the mood selector helps me narrow down options easily."</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://placehold.co/100x100" alt="Young woman with bright smile and colorful headscarf" class="user-img">
+                            <div>
+                                <h5>Priya Patel</h5>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p>"The adventurous mood option introduced me to so many new cuisines I wouldn't have tried otherwise. Love it!"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <div class="d-flex align-items-center mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#4ECDC4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-coffee">
+                            <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                            <line x1="6" y1="1" x2="6" x2="4"></line>
+                            <line x1="10" y1="1" x2="10" x2="8"></line>
+                            <line x1="14" y1="1" x2="14" x2="12"></line>
+                        </svg>
+                        <span style="font-weight: 700; color: white; font-size: 20px; margin-left: 5px;">SmartRecipe</span>
+                    </div>
+                    <p>Making cooking enjoyable by matching recipes to your mood since 2023.</p>
+                    <div class="social-icons mt-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0 footer-links">
+                    <h5>About Us</h5>
+                    <a href="#">Our Story</a>
+                    <a href="#">Team</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Press</a>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0 footer-links">
+                    <h5>Support</h5>
+                    <a href="#">FAQ</a>
+                    <a href="#">Contact Us</a>
+                    <a href="#">Feedback</a>
+                    <a href="#">Help Center</a>
+                </div>
+                <div class="col-md-3 footer-links">
+                    <h5>Legal</h5>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Cookie Policy</a>
+                    <a href="#">Community Guidelines</a>
+                </div>
+            </div>
+            <div class="copyright text-center">
+                <p>&copy; 2023 SmartRecipe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loginBtn').addEventListener('click', function() {
+                
+                // window.location.href = "login.html";
+                window.location.href = 'login.html'; // Adjust the path as necessary
+                
+                alert("Redirecting to login page...");
+            });
+            
+            // Mood selector functionality
+            const moodSelector = document.getElementById('moodSelector');
+            const moodOptions = document.getElementById('moodOptions');
+            const selectedMood = document.getElementById('selectedMood');
+            
+            moodSelector.addEventListener('click', function() {
+                moodOptions.classList.toggle('show');
+            });
+            
+            document.querySelectorAll('.mood-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const mood = this.getAttribute('data-mood');
+                    const moodText = this.textContent.trim();
+                    
+                    selectedMood.textContent = Selected Mood: ${moodText};
+                    moodSelector.innerHTML = <i class="fas fa-${getMoodIcon(mood)} ${mood}"></i> ${moodText};
+                    moodOptions.classList.remove('show');
+                });
+            });
+            
+            function getMoodIcon(mood) {
+                switch(mood) {
+                    case 'happy': return 'laugh';
+                    case 'energetic': return 'bolt';
+                    case 'relaxed': return 'couch';
+                    case 'comfort': return 'heart';
+                    case 'adventurous': return 'mountain';
+                    default: return 'smile';
+                }
+            }
+            
+            // Search functionality
+            document.getElementById('searchBtn').addEventListener('click', function() {
+                const searchQuery = document.getElementById('recipeSearch').value.trim();
+                const moodElement = document.querySelector('.mood-option.active');
+                
+                if (!searchQuery) {
+                    alert("Please enter a recipe search term");
+                    return;
+                }
+                
+                if (!selectedMood.textContent) {
+                    alert("Please select a mood");
+                    return;
+                }
+                
+                const mood = moodElement ? moodElement.getAttribute('data-mood') : '';
+                
+                // Show loading state
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching...';
+                
+                // Simulate API call delay
+                setTimeout(() => {
+                    searchRecipes(searchQuery, mood);
+                    this.innerHTML = '<i class="fas fa-search"></i> Search';
+                }, 1500);
+            });
+            
+            // Recipe data (in a real app, this would come from an API)
+            const recipeData = [
+                {
+                    name: "Berry Bliss Smoothie Bowl",
+                    image: "https://placehold.co/600x400",
+                    description: "A vibrant smoothie bowl packed with antioxidants to uplift your spirits.",
+                    time: "10 mins",
+                    difficulty: "Easy",
+                    servings: 1,
+                    mood: "happy",
+                    tags: ["breakfast", "vegetarian", "quick"]
+                },
+                {
+                    name: "Spicy Thai Basil Chicken",
+                    image: "https://placehold.co/600x400",
+                    description: "Bold flavors to energize your taste buds and give you a kick.",
+                    time: "25 mins",
+                    difficulty: "Medium",
+                    servings: 2,
+                    mood: "energetic",
+                    tags: ["dinner", "spicy", "high-protein"]
+                },
+                {
+                    name: "Creamy Garlic Mushroom Pasta",
+                    image: "https://placehold.co/600x400",
+                    description: "Comforting creamy pasta that feels like a warm hug.",
+                    time: "20 mins",
+                    difficulty: "Easy",
+                    servings: 2,
+                    mood: "comfort",
+                    tags: ["dinner", "vegetarian", "comfort-food"]
+                },
+                {
+                    name: "Japanese Matcha Cheesecake",
+                    image: "https://placehold.co/600x400",
+                    description: "A relaxing dessert with the calming properties of matcha.",
+                    time: "45 mins",
+                    difficulty: "Medium",
+                    servings: 8,
+                    mood: "relaxed",
+                    tags: ["dessert", "vegetarian", "special-occasion"]
+                },
+                {
+                    name: "Korean Kimchi Fried Rice",
+                    image: "https://placehold.co/600x400",
+                    description: "Take your taste buds on an adventure with this bold flavor combination.",
+                    time: "15 mins",
+                    difficulty: "Easy",
+                    servings: 2,
+                    mood: "adventurous",
+                    tags: ["lunch", "quick", "fermented"]
+                }
+            ];
+            
+            function searchRecipes(query, mood) {
+                // Filter recipes based on search query and mood
+                const filteredRecipes = recipeData.filter(recipe => {
+                    const nameMatch = recipe.name.toLowerCase().includes(query.toLowerCase());
+                    const tagMatch = recipe.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()));
+                    const moodMatch = recipe.mood === mood;
+                    
+                    return (nameMatch || tagMatch) && moodMatch;
+                });
+                
+                displayRecipes(filteredRecipes);
+            }
+            
+            function displayRecipes(recipes) {
+                const container = document.getElementById('recipesContainer');
+                const resultsSection = document.getElementById('recipeResults');
+                
+                // Clear previous results
+                container.innerHTML = '';
+                
+                if (recipes.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <i class="fas fa-utensils fa-3x mb-3" style="color: #ddd;"></i>
+                            <h4>No recipes found</h4>
+                            <p>Try a different search term or mood</p>
+                        </div>
+                    `;
+                } else {
+                    // Add new recipes
+                    recipes.forEach(recipe => {
+                        const recipeCard = document.createElement('div');
+                        recipeCard.className = 'col-md-4 mb-4';
+                        recipeCard.innerHTML = `
+                            <div class="recipe-card h-100">
+                                <img src="${recipe.image}" alt="${recipe.name}" class="recipe-img">
+                                <div class="recipe-body">
+                                    <h3 class="recipe-title">${recipe.name}</h3>
+                                    <div class="recipe-meta">
+                                        <span><i class="fas fa-clock"></i> ${recipe.time}</span>
+                                        <span><i class="fas fa-utensils"></i> ${recipe.difficulty}</span>
+                                        <span><i class="fas fa-user-friends"></i> ${recipe.servings}</span>
+                                        <span><i class="fas fa-heart ${recipe.mood}"></i> ${recipe.mood.charAt(0).toUpperCase() + recipe.mood.slice(1)}</span>
+                                    </div>
+                                    <p class="recipe-desc">${recipe.description}</p>
+                                    <button class="recipe-btn">View Recipe</button>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(recipeCard);
+                    });
+                }
+                
+                // Show results section
+                resultsSection.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

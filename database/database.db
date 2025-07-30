@@ -1,0 +1,19 @@
+CREATE TABLE recipes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    mood TEXT NOT NULL,
+    description TEXT,
+    image_url TEXT,
+    ingredients TEXT,
+    instructions TEXT
+);
+
+INSERT INTO recipes (name, mood, description, image_url, ingredients, instructions) VALUES
+('Berry Bliss Smoothie Bowl', 'happy', 'A vibrant smoothie bowl packed with antioxidants to uplift your spirits.', 'https://placehold.co/600x400', '1 cup mixed berries, 1 banana, 1 cup almond milk, 1 tbsp honey, granola for topping', 'Blend all ingredients until smooth. Pour into a bowl and top with granola.'),
+('Spicy Thai Basil Chicken', 'energetic', 'Bold flavors to energize your taste buds and give you a kick.', 'https://placehold.co/600x400', '500g chicken, 2 cups basil, 2 tbsp soy sauce, 1 tbsp chili paste, 1 onion', 'Stir-fry chicken and onion, add basil and sauces, cook until chicken is done.'),
+('Creamy Garlic Mushroom Pasta', 'comfort', 'Comforting creamy pasta that feels like a warm hug.', 'https://placehold.co/600x400', '200g pasta, 200g mushrooms, 1 cup cream, garlic, parmesan', 'Cook pasta, sauté mushrooms and garlic, add cream and cheese, mix with pasta.'),
+('Japanese Matcha Cheesecake', 'relaxed', 'A relaxing dessert with the calming properties of matcha.', 'https://placehold.co/600x400', '200g cream cheese, 100g sugar, 2 eggs, 1 tbsp matcha powder, 1 crust', 'Mix all ingredients, pour into crust, bake at 160°C for 30 minutes.'),
+('Korean Kimchi Fried Rice', 'adventurous', 'Take your taste buds on an adventure with this bold flavor combination.', 'https://placehold.co/600x400', '2 cups rice, 1 cup kimchi, 2 eggs, green onions', 'Fry rice and kimchi, add eggs, stir-fry until cooked.'),
+('Mediterranean Quinoa Salad', 'happy', 'A refreshing salad full of flavors and nutrients.', 'https://placehold.co/600x400', '1 cup quinoa, 1 cucumber, 1 bell pepper, feta cheese, olives', 'Cook quinoa, mix with chopped vegetables and dressing.'),
+('Lentil Soup', 'comfort', 'A hearty soup that warms you up on cold days.', 'https://placehold.co/600x400', '1 cup lentils, 1 onion, 2 carrots, vegetable broth', 'Sauté onion and carrots, add lentils and broth, simmer until cooked.'),
+('Chocolate Avocado Mousse', 'happy', 'A rich and creamy dessert that is surprisingly healthy.', 'https://placehold.co/600x400', '2 ripe avocados, 1/2 cup cocoa powder, 1/2 cup honey', 'Blend all ingredients until smooth, chill before serving.');

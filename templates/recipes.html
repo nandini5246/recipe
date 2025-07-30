@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"> <!-- Link to stylesheet -->
+    <title>Recipes</title>
+    <style>
+        /* Basic styles for the body */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+        }
+
+        .navbar .logo {
+            font-size: 1.5em;
+        }
+
+        .navbar .login-btn {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
+
+        /* Container for search input */
+        .container {
+            margin-top: 20px;
+        }
+
+        /* Suggested section styles */
+        .suggested-section {
+            margin-top: 40px;
+        }
+
+        .suggested-cards {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .suggest-card, .recipe-card {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin: 5px; /* Reduced margin */
+            padding: 10px; /* Reduced padding */
+            width: 150px; /* Reduced width */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Reduced shadow */
+            text-align: center;
+        }
+
+        .suggest-card img, .recipe-card img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="logo">🍽 Recipe Finder</div>
+        <a href="index.html" class="login-btn">Logout</a>
+    </header>
+
+    <!-- Search Page Content -->
+    <div class="container">
+        <h1>Find Your Favorite Recipes</h1>
+        <input type="text" id="searchInput" placeholder="Search for a recipe..." />
+        <button onclick="searchRecipes()">Search</button>
+        <div id="results"></div>
+    </div>
+
+    <!-- Suggested Section -->
+    <section class="suggested-section">
+        <h2>🍴 Trending Recipes</h2>
+        <div class="suggested-cards">
+            <div class="suggest-card">
+                <img src="https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg" alt="Chicken Handi" onerror="this.onerror=null; this.src='fallback-image.jpg';">
+                <h3>Chicken Handi</h3>
+            </div>
+            <div class="suggest-card">
+                <img src="https://www.themealdb.com/images/media/meals/xxtsvx1511814083.jpg" alt="Pasta Carbonara" onerror="this.onerror=null; this.src='fallback-image.jpg';">
+                <h3>Pasta Carbonara</h3>
+            </div>
+            <div class="suggest-card">
+                <img src="https://www.themealdb.com/images/media/meals/xxpqsy1511452222.jpg" alt="Beef Wellington" onerror="this.onerror=null; this.src='fallback-image.jpg';">
+                <h3>Beef Wellington</h3>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Recipe App</p>
+    </footer>
+
+    <script>
+        // Search Recipes
+        function searchRecipes() {
+    const query = document.getElementById("searchInput").value.trim();
+    const resultsDiv = document.getElementById("results");
+
+    if (!query) {
+        resultsDiv.innerHTML = "<p>Please enter a recipe name.</p>";
+        return;
+    }
+
+    fetch(https://www.themealdb.com/api/json/v1/1/search.php?s=${query})
+        .then(res => res.json())
+        .then(data => {
+            if (data.meals) {
+                // Clear previous results
+                resultsDiv.innerHTML = '';
+
+                // Create categories
+                const categories = {
+                    vegetarian: [],
+                    egg: [],
+                    nonVegetarian: [],
+                    american: [],
+                    cakes: [],
+                    others: []
+                };
+
+                // Categorize meals
+                data.meals.forEach(meal => {
+                    const category = meal.strCategory.toLowerCase();
+                    if (category.includes("vegetarian")) {
+                        categories.vegetarian.push(meal);
+                    } else if (category.includes("egg")) {
+                        categories.egg.push(meal);
+                    } else if (category.includes("chicken") || category.includes("beef") || category.includes("pork") || category.includes("fish")) {
+                        categories.nonVegetarian.push(meal);
+                    } else if (category.includes("american")) {
+                        categories.american.push(meal);
+                    } else if (category.includes("cake")) {
+                        categories.cakes.push(meal);
+                    } else {
+                        categories.others.push(meal);
+                    }
+                });
+
+                // Build HTML for each category
+                if (categories.vegetarian.length > 0) {
+                    resultsDiv.innerHTML += buildCategoryHTML("Vegetarian Recipes", categories.vegetarian);
+                }
+                if (categories.egg.length > 0) {
+                    resultsDiv.innerHTML += buildCategoryHTML("Egg Recipes", categories.egg);
+                }
+                if (categories.nonVegetarian.length > 0) {
+                    resultsDiv.innerHTML += buildCategoryHTML("Non-Vegetarian Recipes", categories.nonVegetarian);
+                }
+                if (categories.american.length > 0) {
+                    resultsDiv.innerHTML += buildCategoryHTML("American Recipes", categories.american);
+                }
+                if (categories.cakes.length > 0) {
+                    resultsDiv.innerHTML += buildCategoryHTML("Cakes", categories.cakes);
+                }
+                if (categories.others.length > 0) {
+                    resultsDiv.innerHTML += buildCategoryHTML("Other Recipes", categories.others);
+                }
+            } else {
+                resultsDiv.innerHTML = "<p>No recipes found. Try a different keyword.</p>";
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            resultsDiv.innerHTML = "<p>Something went wrong. Try again later.</p>";
+        });
+}
+
+// Function to build HTML for a category
+function buildCategoryHTML(categoryName, meals) {
+    return `
+        <h2>${categoryName}</h2>
+        <div class="suggested-cards">
+            ${meals.map(meal => `
+                <div class="recipe-card">
+                    <img src="${meal.strMealThumb}" alt="${meal.strMeal}" onerror="this.onerror=null; this.src='fallback-image.jpg';">
+                    <h3>${meal.strMeal}</h3>
+                    <p><strong>Category:</strong> ${meal.strCategory}</p>
+                    <a href="${meal.strSource || '#'}" target="_blank">View Recipe</a>
+                </div>
+            `).join("")}
+        </div>
+    `;
+}
+
+        </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ recipe['name'] }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>{{ recipe['name'] }}</h2>
+        <img src="{{ recipe['image_url'] }}" class="img-fluid" alt="{{ recipe['name'] }}">
+        
+        <h3>Ingredients</h3>
+        <ul>
+            {% for ingredient in recipe['ingredients'].split(',') %}
+            <li>{{ ingredient }}</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Instructions</h3>
+        <p>{{ recipe['instructions'] }}</p>
+
+        <a href="/search" class="btn btn-secondary">Back to Search</a>
+    </div>
+
+    <!-- Error Message for Not Found -->
+    <div class="container mt-5 text-center" id="error-message" style="display: none;">
+        <h1>Not Found</h1>
+        <p>The requested URL was not found on the server. If you entered the URL manually, please check your spelling and try again.</p>
+        <a href="/search" class="btn btn-primary">Back to Search</a>
+    </div>
+
+    <script>
+        // Simulate a Not Found scenario
+        function showError() {
+            document.querySelector('.container').style.display = 'none'; // Hide the main content
+            document.getElementById('error-message').style.display = 'block'; // Show the error message
+        }
+
+        // // Call showError for demo purposes (You can modify this condition based on your logic)
+        // if ( condition for error ) {
+        //     showError();
+        // }
+    </script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
